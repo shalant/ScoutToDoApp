@@ -5,8 +5,11 @@ using Microsoft.Extensions.DependencyInjection;
 using ScoutToDoApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+//builder.Services.AddDbContextFactory<ScoutToDoAppContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("ScoutToDoAppContext") ?? throw new InvalidOperationException("Connection string 'ScoutToDoAppContext' not found.")));
+
 builder.Services.AddDbContextFactory<ScoutToDoAppContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ScoutToDoAppContext") ?? throw new InvalidOperationException("Connection string 'ScoutToDoAppContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'ScoutToDoAppContext' not found.")));
 
 builder.Services.AddQuickGridEntityFrameworkAdapter();
 
