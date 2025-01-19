@@ -1,0 +1,50 @@
+﻿@page "/todoitems/details"
+@using Microsoft.EntityFrameworkCore
+@using ScoutToDoApp.Models
+@inject IDbContextFactory<ScoutToDoApp.Data.ScoutToDoAppContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>ToDoItem</h2>
+    <hr />
+    @if (todoitem is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Name</dt>
+            <dd class="col-sm-10">@todoitem.Name</dd>
+            <dt class="col-sm-2">IsComplete</dt>
+            <dd class="col-sm-10">@todoitem.IsComplete</dd>
+            <dt class="col-sm-2">Secret</dt>
+            <dd class="col-sm-10">@todoitem.Secret</dd>
+        </dl>
+        <div>
+            <a href="@($"/todoitems/edit?id={todoitem.Id}")">Edit</a> |
+            <a href="@($"/todoitems")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private ToDoItem? todoitem;
+
+    [SupplyParameterFromQuery]
+    private long Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        todoitem = await context.ToDoItem.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (todoitem is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
